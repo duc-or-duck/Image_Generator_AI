@@ -1,3 +1,4 @@
+
 import * as dotenv from "dotenv";
 dotenv.config(); // DÒNG QUAN TRỌNG - PHẢI Ở ĐẦU
 
@@ -6,6 +7,7 @@ import { createError } from "../CreateError.js";
 import { v2 as cloudinary } from "cloudinary";
 
 // Cấu hình Cloudinary
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -39,7 +41,6 @@ export const createPost = async (req, res, next) => {
       prompt,
       photo: result.secure_url,
     });
-
     return res.status(201).json({ success: true, data: newPost });
   } catch (error) {
     next(
