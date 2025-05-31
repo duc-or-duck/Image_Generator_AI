@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSearchBar } from "./SearchBar.style";
 import SearchIcon from "@mui/icons-material/Search";
 
-function SearchBar() {
+function SearchBar({ search, setSearch }) {
   return (
     <StyleSearchBar>
       <SearchIcon />
@@ -16,6 +16,8 @@ function SearchBar() {
           background: "transparent",
           fontSize: "16px",
         }}
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
       />
     </StyleSearchBar>
   );

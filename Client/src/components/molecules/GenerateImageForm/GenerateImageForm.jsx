@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { FormSubTitle, FormTitle, StyleForm } from "./GenerateImageForm.style";
-import { Form } from "react-router-dom";
+import { Form, useNavigate } from "react-router-dom";
 import TextInput from "../../atoms/CustomTextInput/CustomTextnput";
-import { Stack } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import CustomButton from "../../atoms/CustomButton/CustomButton";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import CreateIcon from "@mui/icons-material/Create";
+import { CreatePost, GenerateAIImage } from "../../../api";
 
 function GenerateImageForm({
   post,
@@ -15,12 +16,35 @@ function GenerateImageForm({
   generateImageLoading,
   setGenerateImageLoading,
 }) {
-  const generateImage = () => {
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
+  const generateImage = async () => {
     setGenerateImageLoading(true);
+    await GenerateAIImage({ prompt: post.prompt })
+      .then((res) => {
+        setPost({
+          ...post,
+          photo: `data:image/jpeg;base64,${res?.data?.photo}`,
+        });
+        setGenerateImageLoading(false);
+      })
+      .catch((error) => {
+        setError(error?.response?.data?.message);
+        setGenerateImageLoading(false);
+      });
   };
 
-  const createPost = () => {
+  const createPost = async () => {
     setCreatePostLoading(true);
+    await CreatePost({ post })
+      .then((res) => {
+        setCreatePostLoading(false);
+        navigate("/");
+      })
+      .catch((error) => {
+        setError(error?.response?.data?.message);
+        setGenerateImageLoading(false);
+      });
   };
   return (
     <StyleForm gap="40px">
@@ -47,6 +71,7 @@ function GenerateImageForm({
           value={post?.prompt}
           handelChange={(e) => setPost({ ...post, prompt: e.target.value })}
         />
+        {error && <Typography sx={{ color: "red" }}>{error}</Typography>}
         ** You can post the AI Generated Image to the Community **
         <Stack flexDirection="row" gap="16px">
           <CustomButton

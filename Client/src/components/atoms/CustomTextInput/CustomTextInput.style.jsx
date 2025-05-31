@@ -34,7 +34,7 @@ export const Input = styled.input`
   outline: none;
   border: none;
   background-color: transparent;
-  color: ${({ theme }) => theme.text_secondary};
+  color: ${({ theme }) => theme.textPrimary};
   &:focus {
     outline: none;
   }
