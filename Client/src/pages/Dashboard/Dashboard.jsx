@@ -76,9 +76,10 @@ function DashBoard() {
           ) : filteredPosts.length === 0 ? (
             <Typography>No Posts Found</Typography>
           ) : (
-            filteredPosts.map((item) => (
-              <CustomCard key={item._id} item={item} />
-            ))
+            filteredPosts
+              .slice()
+              .reverse()
+              .map((item) => <CustomCard key={item._id} item={item} />)
           )}
         </CardWrapper>
       </StyleContentWrapper>
