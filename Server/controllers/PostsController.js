@@ -1,7 +1,12 @@
-import Post from "../models/Posts.js";
+
 import * as dotenv from "dotenv";
+dotenv.config(); // DÒNG QUAN TRỌNG - PHẢI Ở ĐẦU
+
+import Post from "../models/Posts.js";
 import { createError } from "../CreateError.js";
 import { v2 as cloudinary } from "cloudinary";
+
+// Cấu hình Cloudinary
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -11,7 +16,7 @@ cloudinary.config({
 
 export const GetAllPost = async (req, res, next) => {
   try {
-    const Post = await Post.find({});
+    const posts = await Post.find({});
     return res.status(200).json({ success: true, data: posts });
   } catch (error) {
     next(
@@ -26,11 +31,15 @@ export const GetAllPost = async (req, res, next) => {
 export const createPost = async (req, res, next) => {
   try {
     const { name, prompt, photo } = req.body;
-    const photoUrl = await cloudinary.uploader.upload(photo);
+
+    // Upload ảnh lên Cloudinary
+    const result = await cloudinary.uploader.upload(photo);
+
+    // Tạo bài post mới với URL ảnh
     const newPost = await Post.create({
       name,
       prompt,
-      photo: photoUrl,
+      photo: result.secure_url,
     });
     return res.status(201).json({ success: true, data: newPost });
   } catch (error) {
