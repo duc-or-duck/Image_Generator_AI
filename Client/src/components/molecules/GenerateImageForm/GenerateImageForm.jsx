@@ -24,12 +24,13 @@ function GenerateImageForm({
       .then((res) => {
         setPost({
           ...post,
-          photo: `data:image/jpeg;base64,${res?.data?.photo}`,
+          photo: `data:image/png;base64,${res.data.photo}`, // Sửa thành 'photo'
         });
-        setGenerateImageLoading(false);
       })
       .catch((error) => {
         setError(error?.response?.data?.message);
+      })
+      .finally(() => {
         setGenerateImageLoading(false);
       });
   };
